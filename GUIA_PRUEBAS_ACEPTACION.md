@@ -107,42 +107,37 @@ El flujo publica el reporte incluso si falla una prueba, siempre que Cucumber
 haya podido generarlo. Un resultado exitoso debe mostrar `1 scenario (1
 passed)` y `3 steps (3 passed)`.
 
-## Si el repositorio de GitHub aún está vacío
+## Publicar cambios y volver a ejecutar el pipeline
 
-La primera publicación debe hacerse desde la carpeta local que contiene
-`index.html`, `package.json`, `features`, `src` y `.github`. Abre PowerShell en
-esa carpeta y ejecuta estos comandos:
-
-```powershell
-git init
-git branch -M main
-git add .gitignore .github features src index.html package.json package-lock.json GUIA_PRUEBAS_ACEPTACION.md
-git commit -m "Preparar prueba de aceptación del carrito"
-git remote add origin https://github.com/DEYA7276/Pruebas_Aceptacion.git
-git push -u origin main
-```
-
-Si `origin` ya existe, no repitas `git remote add origin`; revisa su dirección
-con `git remote -v` y, si hace falta corregirla, usa:
+El proyecto ya está publicado en
+[GitHub](https://github.com/DEYA7276/Pruebas_Aceptacion). Para ejecutar otra vez
+la validación después de hacer cambios, abre PowerShell en la carpeta del
+proyecto y ejecuta:
 
 ```powershell
-git remote set-url origin https://github.com/DEYA7276/Pruebas_Aceptacion.git
+git status
+git add .
+git commit -m "Describe el cambio"
+git push
 ```
 
-GitHub puede solicitar autenticación durante `git push`. Al terminar, abre
-**Actions** y revisa el flujo iniciado por el `push`. No subas `node_modules`
-ni el reporte HTML generado; `.gitignore` los excluye.
+El `push` a la rama `main` inicia el flujo automáticamente. También puedes
+iniciarlo manualmente con **Actions** > **CI Pruebas de Aceptacion UAT** >
+**Run workflow**. Antes de confirmar `git add .`, revisa `git status` y
+comprueba que no incluyas archivos locales que no quieras publicar; `.gitignore`
+excluye `node_modules` y los reportes HTML generados.
 
 ## Evidencia y conclusión
 
-En la ejecución local validada, Cucumber informó `1 scenario (1 passed)` y
-`3 steps (3 passed)`. El reporte HTML se genera localmente en
-`reports/uat-report.html`; en GitHub Actions se publica como
-`reporte-pruebas-aceptacion`.
+La ejecución local de `npm run test:report` informó `1 scenario (1 passed)` y
+`3 steps (3 passed)`. La primera ejecución remota de GitHub Actions también
+terminó con estado **success**: la instalación, la prueba de aceptación en
+Chromium y la publicación del reporte fueron aprobadas. Se puede consultar en
+[la ejecución de GitHub Actions](https://github.com/DEYA7276/Pruebas_Aceptacion/actions/runs/39179948109).
+El reporte descargable se llama `reporte-pruebas-aceptacion`. Localmente se
+genera en `reports/uat-report.html`.
 
 La prueba cumple el objetivo de aceptación porque verifica el resultado de un
 requisito de negocio en la interfaz que usa el cliente. La ejecución local
-aprobada demuestra el funcionamiento del escenario en Chromium. La ejecución
-remota se demuestra al publicar el proyecto y revisar la ejecución y el
-artefacto en GitHub Actions; hasta completar ese primer `push`, GitHub no puede
-mostrar un resultado remoto.
+aprobada y la ejecución remota exitosa, junto con el artefacto publicado,
+demuestran que el escenario puede repetirse localmente y en el pipeline.
