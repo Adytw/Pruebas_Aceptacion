@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f7fb">
+    <title>Mi tienda | Carrito de compras</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #17233b;
+        background: #f4f7fb;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; }
+      button { font: inherit; }
+
+      .page { width: min(1040px, calc(100% - 40px)); margin: 0 auto; padding: 48px 0; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 48px; }
+      .brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 800; letter-spacing: -0.04em; }
+      .brand-mark { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 14px; color: white; background: #5268e8; font-size: 22px; }
+      .cart-pill { display: flex; align-items: center; gap: 8px; padding: 10px 15px; border: 1px solid #e3e8f2; border-radius: 999px; background: white; font-size: 14px; font-weight: 700; }
+      .cart-count { display: grid; min-width: 23px; height: 23px; padding: 0 6px; place-items: center; border-radius: 999px; color: white; background: #5268e8; font-size: 12px; }
+      .intro { margin-bottom: 28px; }
+      .eyebrow { margin: 0 0 8px; color: #5268e8; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { margin: 0; font-size: clamp(30px, 5vw, 42px); letter-spacing: -.055em; }
+      .subtitle { margin: 10px 0 0; color: #758099; font-size: 16px; }
+      .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .9fr); gap: 24px; align-items: start; }
+      .products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .product, .cart { border: 1px solid #e8ecf4; border-radius: 22px; background: white; box-shadow: 0 12px 35px rgb(35 55 100 / 5%); }
+      .product { padding: 22px; }
+      .product-art { display: grid; height: 150px; margin-bottom: 20px; place-items: center; border-radius: 16px; background: #f0f2ff; font-size: 68px; }
+      .product:nth-child(2) .product-art { background: #fff5e9; }
+      .product h2 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+      .product-note { margin: 6px 0 18px; color: #8791a6; font-size: 13px; }
+      .product-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      .price { font-size: 20px; font-weight: 800; }
+      .add-button { padding: 10px 14px; border: 0; border-radius: 11px; color: white; background: #5268e8; cursor: pointer; font-size: 13px; font-weight: 750; transition: transform .15s, background .15s; }
+      .add-button:hover { transform: translateY(-1px); background: #4055d2; }
+      .add-button:focus-visible, .clear-button:focus-visible { outline: 3px solid #aab5ff; outline-offset: 3px; }
+      .cart { overflow: hidden; }
+      .cart-heading { display: flex; align-items: center; justify-content: space-between; padding: 21px 22px; border-bottom: 1px solid #edf0f6; }
+      .cart-heading h2 { margin: 0; font-size: 17px; }
+      .cart-items { min-height: 160px; padding: 8px 22px; }
+      .empty { display: grid; min-height: 140px; place-content: center; gap: 8px; color: #8a94a8; text-align: center; font-size: 13px; }
+      .empty-icon { font-size: 32px; }
+      .cart-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid #f0f2f7; font-size: 14px; }
+      .cart-row:last-child { border-bottom: 0; }
+      .item-name { font-weight: 700; }
+      .item-detail { display: block; margin-top: 4px; color: #8993a6; font-size: 12px; }
+      .line-total { white-space: nowrap; font-weight: 750; }
+      .cart-summary { padding: 18px 22px 22px; border-top: 1px solid #edf0f6; background: #fbfcff; }
+      .summary-line { display: flex; justify-content: space-between; color: #758099; font-size: 14px; }
+      .total-line { margin-top: 12px; color: #17233b; font-size: 16px; font-weight: 800; }
+      .total { font-size: 24px; letter-spacing: -.04em; }
+      .clear-button { margin-top: 16px; padding: 0; border: 0; color: #77829a; background: transparent; cursor: pointer; font-size: 13px; font-weight: 700; }
+      .clear-button:hover { color: #d14c61; }
+      .tip { margin: 20px 0 0; color: #8791a6; font-size: 12px; line-height: 1.6; text-align: center; }
+
+      @media (max-width: 700px) {
+        .page { width: min(520px, calc(100% - 28px)); padding: 28px 0; }
+        .topbar { margin-bottom: 36px; }
+        .layout { grid-template-columns: 1fr; }
+        .products { grid-template-columns: 1fr 1fr; }
+        .product { padding: 14px; }
+        .product-art { height: 110px; font-size: 52px; }
+        .product-footer { align-items: flex-start; flex-direction: column; }
+        .add-button { width: 100%; }
+      }
+
+      @media (max-width: 380px) {
+        .products { grid-template-columns: 1fr; }
+        .product-footer { align-items: center; flex-direction: row; }
+        .add-button { width: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span> Mi tienda</div>
+        <div class="cart-pill" aria-live="polite"><span aria-hidden="true">🛒</span> Mi carrito <span class="cart-count" id="item-count">0</span></div>
+      </header>
+
+      <section class="intro" aria-labelledby="page-title">
+        <!-- Presento el objetivo del ejemplo: probar el flujo de compra desde la perspectiva del cliente. -->
+        <p class="eyebrow">Prueba de aceptación · ejemplo interactivo</p>
+        <h1 id="page-title">Prepara tu escritorio</h1>
+        <p class="subtitle">Agrega productos y observa cómo se calcula el total.</p>
+      </section>
+
+      <div class="layout">
+        <!-- Cada botón ofrece un producto con su nombre y precio para que el cliente pueda agregarlo al pedido. -->
+        <section class="products" aria-label="Productos disponibles">
+          <article class="product">
+            <div class="product-art" aria-hidden="true">📓</div>
+            <h2>Cuaderno</h2>
+            <p class="product-note">Rayado · 100 hojas</p>
+            <div class="product-footer">
+              <span class="price">$10.00</span>
+              <button class="add-button" type="button" data-name="cuaderno" data-price="10">Agregar</button>
+            </div>
+          </article>
+          <article class="product">
+            <div class="product-art" aria-hidden="true">✏️</div>
+            <h2>Lápiz</h2>
+            <p class="product-note">HB · punta resistente</p>
+            <div class="product-footer">
+              <span class="price">$5.00</span>
+              <button class="add-button" type="button" data-name="lápiz" data-price="5">Agregar</button>
+            </div>
+          </article>
+        </section>
+
+        <!-- Aquí se muestran el estado del carrito y los resultados que el cliente necesita validar. -->
+        <aside class="cart" aria-labelledby="cart-title">
+          <div class="cart-heading">
+            <h2 id="cart-title">Tu pedido</h2>
+            <span id="item-label" class="product-note" style="margin: 0">0 artículos</span>
+          </div>
+          <div class="cart-items" id="cart-items" aria-live="polite">
+            <div class="empty"><span class="empty-icon" aria-hidden="true">🛍️</span><span>Tu carrito está vacío.<br>¡Agrega algo rico para estudiar!</span></div>
+          </div>
+          <div class="cart-summary">
+            <div class="summary-line"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+            <div class="summary-line total-line"><span>Total</span><span class="total" id="total">$0.00</span></div>
+            <button class="clear-button" id="clear-cart" type="button" hidden>Vaciar carrito</button>
+          </div>
+        </aside>
+      </div>
+      <!-- Este es el resultado esperado del escenario de aceptación: agregar dos cuadernos de $10 debe dar $20. -->
+      <p class="tip">Prueba: agrega 2 cuadernos. El total esperado es <strong>$20.00</strong>, igual que en el escenario de Cucumber.</p>
+    </main>
+
+    <!-- Cargo la lógica del carrito antes de usarla en el código que conecta la interfaz. -->
+    <script src="src/carrito.js"></script>
+    <script>
+      // Mantengo referencias a la lógica y a los elementos que actualizo cuando cambia el carrito.
+      const carrito = new Carrito();
+      const cartItems = document.querySelector('#cart-items');
+      const total = document.querySelector('#total');
+      const subtotal = document.querySelector('#subtotal');
+      const itemCount = document.querySelector('#item-count');
+      const itemLabel = document.querySelector('#item-label');
+      const clearButton = document.querySelector('#clear-cart');
+
+      // Formateo los importes con dos decimales para que el resultado sea fácil de comprobar.
+      function money(amount) {
+        return `$${amount.toFixed(2)}`;
+      }
+
+      // Reflejo en pantalla los productos, las cantidades y el total calculado por el carrito.
+      function renderCart() {
+        const grouped = new Map();
+        let count = 0;
+
+        // Agrupo las unidades del mismo producto para mostrar una sola línea y contar todas las unidades.
+        for (const product of carrito.productos) {
+          const current = grouped.get(product.nombre) || { ...product, cantidad: 0 };
+          current.cantidad += product.cantidad;
+          grouped.set(product.nombre, current);
+          count += product.cantidad;
+        }
+
+        // Si no hay productos, muestro el estado vacío; de lo contrario, presento el detalle del pedido.
+        if (count === 0) {
+          cartItems.innerHTML = '<div class="empty"><span class="empty-icon" aria-hidden="true">🛍️</span><span>Tu carrito está vacío.<br>¡Agrega algo rico para estudiar!</span></div>';
+        } else {
+          cartItems.innerHTML = [...grouped.values()].map((product) =>
+            `<div class="cart-row"><span><span class="item-name">${product.nombre}</span><span class="item-detail">${product.cantidad} × ${money(product.precio)}</span></span><span class="line-total">${money(product.cantidad * product.precio)}</span></div>`
+          ).join('');
+        }
+
+        const amount = carrito.obtenerTotal();
+        total.textContent = money(amount);
+        subtotal.textContent = money(amount);
+        itemCount.textContent = count;
+        itemLabel.textContent = `${count} ${count === 1 ? 'artículo' : 'artículos'}`;
+        clearButton.hidden = count === 0;
+      }
+
+      // Al agregar un producto, actualizo el estado y vuelvo a dibujar el carrito.
+      document.querySelectorAll('.add-button').forEach((button) => {
+        button.addEventListener('click', () => {
+          carrito.agregar(button.dataset.name, 1, Number(button.dataset.price));
+          renderCart();
+        });
+      });
+
+      // Permito vaciar el pedido y actualizar la interfaz al estado inicial.
+      clearButton.addEventListener('click', () => {
+        carrito.productos = [];
+        renderCart();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+name: CI Pruebas de Aceptacion UAT
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    # Permite iniciar la validación manualmente desde la pestaña Actions.
+
+jobs:
+  pruebas-uat:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar Chromium para las pruebas de navegador
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar pruebas de aceptación en la tienda
+        run: npm run test:report
+
+      - name: Publicar reporte de aceptación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-pruebas-aceptacion
+          path: reports/uat-report.html
+          if-no-files-found: warn
