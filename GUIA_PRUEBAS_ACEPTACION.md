@@ -133,7 +133,7 @@ La ejecución local de `npm run test:report` informó `1 scenario (1 passed)` y
 `3 steps (3 passed)`. La primera ejecución remota de GitHub Actions también
 terminó con estado **success**: la instalación, la prueba de aceptación en
 Chromium y la publicación del reporte fueron aprobadas. Se puede consultar en
-[la ejecución de GitHub Actions](https://github.com/DEYA7276/Pruebas_Aceptacion/actions/runs/39179948109).
+[la ejecución de GitHub Actions](https://github.com/DEYA7276/Pruebas_Aceptacion/actions/runs/39183462343).
 El reporte descargable se llama `reporte-pruebas-aceptacion`. Localmente se
 genera en `reports/uat-report.html`.
 
